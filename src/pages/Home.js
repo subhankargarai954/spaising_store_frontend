@@ -1,18 +1,19 @@
+// Home.jsx
 import { useEffect, useState } from "react";
 import API from "../services/api";
 import ProductCard from "../components/ProductCard";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "../hooks/useCart";
 
 export default function Home() {
     const [products, setProducts] = useState([]);
-    const [cart, setCart] = useState([]);
     const [nextPageUrl, setNextPageUrl] = useState("products/");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const { cart, addToCart } = useCart(); // ✅ Use context
 
     const fetchProducts = async () => {
         if (!nextPageUrl || loading) return;
-
         setLoading(true);
         try {
             const res = await API.get(nextPageUrl);
@@ -22,7 +23,12 @@ export default function Home() {
             const newItems = res.data.results.filter(
                 (p) => !existingIds.has(p.id)
             );
-            setProducts((prev) => [...prev, ...newItems]);
+            setProducts((prev) => {
+                const allProducts = [...prev, ...newItems];
+                const uniqueProductsMap = new Map();
+                allProducts.forEach((p) => uniqueProductsMap.set(p.id, p));
+                return Array.from(uniqueProductsMap.values());
+            });
 
             // handle next URL
             const fullNext = res.data.next;
@@ -61,35 +67,20 @@ export default function Home() {
         return () => window.removeEventListener("scroll", handleScroll);
     }, [loading, nextPageUrl, products]);
 
-    const handleAddToCart = (product) => {
-        const exists = cart.find((item) => item.product.id === product.id);
-        if (exists) {
-            setCart(
-                cart.map((item) =>
-                    item.product.id === product.id
-                        ? { ...item, quantity: item.quantity + 1 }
-                        : item
-                )
-            );
-        } else {
-            setCart([...cart, { product, quantity: 1 }]);
-        }
-    };
-
     return (
         <div>
             <h2>Products</h2>
-            <button onClick={() => navigate("/cart", { state: { cart } })}>
-                🛒 Cart ({cart.length})
+            <button onClick={() => navigate("/cart")}>
+                Cart ({cart.length})
             </button>
-            <button onClick={() => navigate("/orders")}>📦 My Orders</button>
+            <button onClick={() => navigate("/orders")}> My Orders</button>
 
             <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
                 {products.map((p) => (
                     <ProductCard
-                        key={`product-${p.id}`} // Ensures unique key
+                        key={`product-${p.id}`}
                         product={p}
-                        onAddToCart={handleAddToCart}
+                        onAddToCart={() => addToCart(p)} // ✅ addToCart from context
                     />
                 ))}
             </div>

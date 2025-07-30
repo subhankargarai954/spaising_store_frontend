@@ -18,16 +18,16 @@ export default function Navbar() {
                 background: "#eee",
             }}
         >
-            <button onClick={() => navigate("/")}>🏠 Home</button>
-            <button onClick={() => navigate("/cart")}>🛒 Cart</button>
-            <button onClick={() => navigate("/orders")}>📦 My Orders</button>
+            <button onClick={() => navigate("/")}> Home</button>
+            <button onClick={() => navigate("/cart")}> Cart</button>
+            <button onClick={() => navigate("/orders")}> My Orders</button>
 
             {user?.is_admin && (
-                <button onClick={() => navigate("/admin")}>👑 Admin</button>
+                <button onClick={() => navigate("/admin")}> Admin</button>
             )}
 
             {user ? (
-                <button onClick={logout}>🚪 Logout ({user.username})</button>
+                <button onClick={logout}> Logout ({user.username})</button>
             ) : (
                 <>
                     <button onClick={() => navigate("/login")}>Login</button>

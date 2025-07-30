@@ -1,9 +1,9 @@
-import { useLocation } from "react-router-dom";
+// Cart.jsx
 import API from "../services/api";
+import { useCart } from "../hooks/useCart";
 
 export default function Cart() {
-    const { state } = useLocation();
-    const cart = state?.cart || [];
+    const { cart, clearCart } = useCart(); // ✅ No useLocation
 
     const handleCheckout = async () => {
         const items = cart.map((c) => ({
@@ -12,6 +12,7 @@ export default function Cart() {
         }));
         await API.post("checkout/", { items });
         alert("Order placed!");
+        clearCart(); // ✅ Optional: clear cart after checkout
     };
 
     return (

@@ -34,7 +34,7 @@ export default function OrderHistory() {
                         }}
                     >
                         <p>
-                            <b>Order #{order.id}</b> | ₹{order.total_price} |{" "}
+                            <b>Order #{order.id}</b> | ₹ {order.total_price} |{" "}
                             {new Date(order.created_at).toLocaleString()}
                         </p>
                         <ul>

@@ -7,8 +7,8 @@ import OrderHistory from "./pages/OrderHistory";
 import Navbar from "./components/Navbar";
 
 import { lazy, Suspense } from "react";
-const AdminPanel = lazy(() => import("./pages/admin/AdminPanel"));
 
+const AdminPanel = lazy(() => import("./pages/admin/AdminPanel"));
 const AdminProducts = lazy(() => import("./pages/admin/AdminProducts"));
 const AdminOrders = lazy(() => import("./pages/admin/AdminOrders"));
 const AdminUsers = lazy(() => import("./pages/admin/AdminUsers"));
